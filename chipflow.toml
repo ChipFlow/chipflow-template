@@ -1,0 +1,15 @@
+[chipflow]
+project_name = "chipflow-examples-minimal"
+
+[chipflow.top]
+soc = "design.design:MySoC"
+
+[chipflow.steps]
+board = "design.steps.board:MyBoardStep"
+software = "design.steps.software:MySoftwareStep"
+
+[chipflow.silicon]
+process = "sky130"
+package = "openframe"
+
+
