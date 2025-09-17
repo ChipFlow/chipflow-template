@@ -51,8 +51,5 @@
   "postStartCommand": "echo 'ChipFlow development environment is ready!'",
 
   // Set container user
-  "remoteUser": "vscode",
-
-  // Add required system packages and tools
-  "updateContentCommand": ".devcontainer/update-content.sh"
+  "remoteUser": "vscode"
 }

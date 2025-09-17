@@ -20,10 +20,12 @@ if command -v pdm &> /dev/null; then
     fi
 fi
 
-# Update VS Code extensions
-if command -v code &> /dev/null; then
+# Update VS Code extensions (skip in prebuild environment)
+if command -v code &> /dev/null && [ -z "$CODESPACES" ]; then
     echo "🎨 Updating VS Code extensions..."
     code --update-extensions
+else
+    echo "ℹ️  Skipping VS Code extension updates (not available in prebuild environment)"
 fi
 
 echo "✅ Environment update complete!"
