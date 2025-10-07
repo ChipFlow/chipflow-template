@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base-alpine:latest
+FROM mcr.microsoft.com/devcontainers/base:alpine-3.20
 
 # Install minimal dependencies - PDM will handle Python environment
 RUN apk add --no-cache \
