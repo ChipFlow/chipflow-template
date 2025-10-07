@@ -16,8 +16,8 @@ RUN apk add --no-cache \
     shadow
 
 # Create user with sudo access
-RUN addgroup -g 1000 user && \
-    adduser -D -u 1000 -G user -s /bin/bash user && \
+RUN addgroup -g 1100 user && \
+    adduser -D -u 1100 -G user -s /bin/bash user && \
     echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
