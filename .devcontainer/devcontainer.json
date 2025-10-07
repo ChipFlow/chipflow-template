@@ -50,10 +50,10 @@
 
   // Mount optimizations - persist venv and extensions
   "mounts": [
-    "source=chipflow-vscode-extensions,target=/home/vscode/.vscode-server/extensions,type=volume",
+    "source=chipflow-vscode-extensions,target=/home/user/.vscode-server/extensions,type=volume",
     "source=chipflow-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
   ],
 
   // Set container user
-  "remoteUser": "vscode"
+  "remoteUser": "user"
 }
