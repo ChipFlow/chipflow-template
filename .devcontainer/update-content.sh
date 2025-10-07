@@ -4,10 +4,6 @@ set -e
 
 echo "🔄 Updating ChipFlow development environment..."
 
-# Update system packages
-echo "📦 Updating system packages..."
-sudo apt-get update && sudo apt-get upgrade -y
-
 # Update PDM if it exists
 if command -v pdm &> /dev/null; then
     echo "🐍 Updating PDM..."

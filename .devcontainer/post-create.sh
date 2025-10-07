@@ -46,11 +46,11 @@ if [ -n "$CHIPFLOW_DESIGN_CONFIG" ]; then
 
 \`\`\`bash
 # Build and run simulation
-pdm chipflow sim build
-pdm chipflow sim run
+chipflow sim build
+chipflow sim run
 
 # Generate Verilog
-pdm chipflow build
+chipflow build
 \`\`\`
 
 ## VS Code Tasks
@@ -85,3 +85,6 @@ echo "  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation"
 echo "  • chipflow --help - ChipFlow CLI help"
 echo "  • pdm run --list - See all available commands"
 echo ""
+echo "Entering venv:"
+pdm config check_update false
+eval $(pdm venv activate)
