@@ -15,21 +15,21 @@ RUN apk add --no-cache \
     sudo \
     shadow
 
-# Create vscode user with sudo access
-RUN addgroup -g 1000 vscode && \
-    adduser -D -u 1000 -G vscode -s /bin/bash vscode && \
-    echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode && \
-    chmod 0440 /etc/sudoers.d/vscode
+# Create user with sudo access
+RUN addgroup -g 1000 user && \
+    adduser -D -u 1000 -G user -s /bin/bash user && \
+    echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
+    chmod 0440 /etc/sudoers.d/user
 
-# Switch to vscode user
-USER vscode
-WORKDIR /home/vscode
+# Switch to user
+USER user
+WORKDIR /home/user
 
-# Install PDM for vscode user
+# Install PDM for user
 RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
-    echo 'export PATH="/home/vscode/.local/bin:$PATH"' >> ~/.bashrc && \
+    echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
     echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc
 
 # Set PDM to use in-project venv by default
 ENV PDM_VENV_IN_PROJECT=1
-ENV PATH="/home/vscode/.local/bin:$PATH"
+ENV PATH="/home/user/.local/bin:$PATH"
