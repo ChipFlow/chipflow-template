@@ -3,15 +3,16 @@ FROM mcr.microsoft.com/devcontainers/base:alpine-3.20
 # Install minimal dependencies - PDM will handle Python environment
 RUN apk add --no-cache \
     bash \
-    git \
-    curl \
     build-base \
-    python3 \
-    python3-dev \
-    py3-pip \
+    curl \
+    git \
+    github-cli \
+    jq \
     nodejs \
     npm \
-    jq \
+    py3-pip \
+    python3 \
+    python3-dev \
     sudo \
     shadow
 

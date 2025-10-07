@@ -4,16 +4,11 @@
     "dockerfile": "Dockerfile"
   },
 
-  // Features to install
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  },
-
   // Configure tool-specific properties
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": "/home/user/.venv/bin/python",
         "python.analysis.typeCheckingMode": "off",
         "python.linting.enabled": true,
         "python.linting.pylintEnabled": false,
