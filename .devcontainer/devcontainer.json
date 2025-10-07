@@ -4,19 +4,9 @@
     "dockerfile": "Dockerfile"
   },
 
-  // Features to install (optimized)
+  // Features to install
   "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20",
-      "nvmVersion": "latest"
-    },
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": false,
-      "installOhMyZsh": false,
-      "upgradePackages": false
-    }
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
 
   // Configure tool-specific properties
@@ -59,13 +49,14 @@
   // Container optimizations
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
-    "PYTHONDONTWRITEBYTECODE": "1"
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PDM_VENV_IN_PROJECT": "1"
   },
 
-  // Mount optimizations
+  // Mount optimizations - persist venv and extensions
   "mounts": [
     "source=chipflow-vscode-extensions,target=/home/vscode/.vscode-server/extensions,type=volume",
-    "source=chipflow-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    "source=chipflow-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
   ],
 
   // Set container user

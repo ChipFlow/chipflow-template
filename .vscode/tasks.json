@@ -4,8 +4,8 @@
     {
       "label": "ChipFlow: Build Simulation",
       "type": "shell",
-      "command": "pdm",
-      "args": ["chipflow", "sim", "build"],
+      "command": "chipflow",
+      "args": ["sim", "build"],
       "group": {
         "kind": "build",
         "isDefault": true
@@ -17,13 +17,13 @@
         "clear": false
       },
       "problemMatcher": [],
-      "detail": "Build the ChipFlow simulation (pdm chipflow sim build)"
+      "detail": "Build the ChipFlow simulation"
     },
     {
       "label": "ChipFlow: Run Simulation",
       "type": "shell",
-      "command": "pdm",
-      "args": ["chipflow", "sim", "run"],
+      "command": "chipflow",
+      "args": ["sim", "run"],
       "group": {
         "kind": "test",
         "isDefault": true
@@ -35,7 +35,7 @@
         "clear": false
       },
       "problemMatcher": [],
-      "detail": "Run the ChipFlow simulation (pdm chipflow sim run)",
+      "detail": "Run the ChipFlow simulation",
       "dependsOn": ["ChipFlow: Build Simulation"]
     },
     {
@@ -53,8 +53,8 @@
     {
       "label": "ChipFlow: Generate Verilog",
       "type": "shell",
-      "command": "pdm",
-      "args": ["chipflow", "build"],
+      "command": "chipflow",
+      "args": ["build"],
       "group": "build",
       "presentation": {
         "reveal": "always",
@@ -63,7 +63,7 @@
         "clear": false
       },
       "problemMatcher": [],
-      "detail": "Generate Verilog from design (pdm chipflow build)"
+      "detail": "Generate Verilog from design"
     },
     {
       "label": "ChipFlow: Clean",

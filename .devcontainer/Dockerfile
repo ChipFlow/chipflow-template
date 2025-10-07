@@ -1,39 +1,35 @@
-FROM mcr.microsoft.com/devcontainers/python:1-3.11-bookworm
+FROM mcr.microsoft.com/devcontainers/base-alpine:latest
 
-# Install system dependencies in the image build (cached in prebuild)
-RUN apt-get update && apt-get install -y \
-    build-essential \
+# Install minimal dependencies - PDM will handle Python environment
+RUN apk add --no-cache \
+    bash \
+    git \
     curl \
-    wget \
-    make \
-    cmake \
-    pkg-config \
-    libffi-dev \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    libncurses5-dev \
-    libgdbm-dev \
-    libnss3-dev \
-    liblzma-dev \
+    build-base \
+    python3 \
+    python3-dev \
+    py3-pip \
+    nodejs \
+    npm \
     jq \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    sudo \
+    shadow
 
-# Install ripgrep and fd
-RUN curl -sSLO https://github.com/BurntSushi/ripgrep/releases/download/13.0.0/ripgrep_13.0.0_amd64.deb && \
-    curl -sSLO https://github.com/sharkdp/fd/releases/download/v8.7.0/fd_8.7.0_amd64.deb && \
-    dpkg -i ripgrep_13.0.0_amd64.deb fd_8.7.0_amd64.deb && \
-    rm -f *.deb
+# Create vscode user with sudo access
+RUN addgroup -g 1000 vscode && \
+    adduser -D -u 1000 -G vscode -s /bin/bash vscode && \
+    echo "vscode ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/vscode && \
+    chmod 0440 /etc/sudoers.d/vscode
 
-# Install PDM globally in the image
-RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
-    echo 'export PATH="/root/.local/bin:$PATH"' >> /etc/bash.bashrc
-
-# Switch to vscode user and install PDM for them too
+# Switch to vscode user
 USER vscode
-RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
-    echo 'export PATH="/home/vscode/.local/bin:$PATH"' >> ~/.bashrc
+WORKDIR /home/vscode
 
-USER root
+# Install PDM for vscode user
+RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
+    echo 'export PATH="/home/vscode/.local/bin:$PATH"' >> ~/.bashrc && \
+    echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc
+
+# Set PDM to use in-project venv by default
+ENV PDM_VENV_IN_PROJECT=1
+ENV PATH="/home/vscode/.local/bin:$PATH"

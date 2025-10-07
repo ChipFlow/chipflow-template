@@ -4,8 +4,9 @@ set -e
 
 echo "🚀 ChipFlow codespace starting..."
 
-# Ensure PDM is in PATH
+# Ensure PDM is in PATH and venv auto-activation is configured
 export PATH="/home/vscode/.local/bin:$PATH"
+eval "$(pdm venv activate in-project 2>/dev/null || true)"
 
 # Check if design configuration was passed from configurator
 if [ -n "$CHIPFLOW_DESIGN_CONFIG" ]; then
@@ -72,19 +73,15 @@ else
     echo "ℹ️  No design configuration provided - using template defaults"
 fi
 
-# Create activation script
-cat > activate_env.sh << 'EOF'
-#!/bin/bash
-eval $(pdm info --env)
-echo "✅ ChipFlow environment activated!"
-echo "📋 Run 'pdm run --list' to see available commands"
-EOF
-chmod +x activate_env.sh
-
 echo ""
 echo "🎉 ChipFlow codespace is ready!"
 echo ""
+if [ -f ".venv/bin/activate" ]; then
+    echo "✅ PDM virtual environment is active"
+    echo ""
+fi
 echo "Quick commands:"
 echo "  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation"
-echo "  • pdm chipflow --help - ChipFlow CLI help"
+echo "  • chipflow --help - ChipFlow CLI help"
+echo "  • pdm run --list - See all available commands"
 echo ""
