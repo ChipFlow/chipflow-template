@@ -18,7 +18,8 @@
           "*.toml": "toml",
           "*.py": "python"
         },
-        "terminal.integrated.defaultProfile.linux": "bash"
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "remote.autoForwardPorts": false
       },
       "extensions": [
         "ms-python.python",
