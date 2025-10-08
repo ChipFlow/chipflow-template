@@ -1,0 +1,7 @@
+🎉 ChipFlow codespace is ready!
+
+Quick commands:
+  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation
+  • chipflow --help - ChipFlow CLI help
+  • pdm run --list - See all available commands
+

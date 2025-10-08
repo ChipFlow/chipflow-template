@@ -26,11 +26,23 @@ RUN addgroup -g 1100 user && \
 USER user
 WORKDIR /home/user
 
-# Install PDM for user
-RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
-    echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
-    echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc
-
-# Set PDM to use in-project venv by default
-ENV PDM_VENV_IN_PROJECT=1
+# Install and setup PDM for user
 ENV PATH="/home/user/.local/bin:$PATH"
+ENV PDM_VENV_IN_PROJECT=1
+ 
+
+RUN --mount=type=bind,target=/src \
+    curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
+    curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
+    echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc && \
+    cp /src/pyproject.toml . && \
+    cp /src/pdm.lock . && \
+    echo python $(python --version) && \
+    echo PDM Config && \
+    pdm -vv config && \
+    pdm config use_uv true && \
+    echo PDM install && \
+    pdm -vv -n install && \
+    pdm config check_update false
+	
