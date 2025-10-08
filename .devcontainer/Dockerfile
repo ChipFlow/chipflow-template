@@ -22,6 +22,8 @@ RUN addgroup -g 1100 user && \
     echo "user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/user && \
     chmod 0440 /etc/sudoers.d/user
 
+COPY first-run-notice.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt
+
 # Switch to user
 USER user
 WORKDIR /home/user
@@ -36,7 +38,6 @@ RUN --mount=type=bind,target=/src \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
     echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc && \
-    cp /src/first-run-notice.txt /usr/local/etc/vscode-dev-containers/ && \
     cp /src/pyproject.toml . && \
     cp /src/pdm.lock . && \
     echo python $(python --version) && \
