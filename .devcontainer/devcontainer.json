@@ -22,10 +22,7 @@
         "remote.autoForwardPorts": false
       },
       "extensions": [
-        "ms-python.python",
-        "charliermarsh.ruff",
-        "tamasfe.even-better-toml",
-        "GitHub.copilot"
+        "ms-python.python"
       ]
     }
   },
