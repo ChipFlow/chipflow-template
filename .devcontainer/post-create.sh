@@ -15,10 +15,28 @@ CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}
 if [ -n "$CODESPACE_NAME" ]; then
     echo "📡 Fetching design configuration for codespace: $CODESPACE_NAME"
 
-    # Try to fetch design from configurator API
-    DESIGN_RESPONSE=$(curl -s -w "\n%{http_code}" "${CONFIGURATOR_API}/api/design/${CODESPACE_NAME}")
-    HTTP_CODE=$(echo "$DESIGN_RESPONSE" | tail -n1)
-    DESIGN_BODY=$(echo "$DESIGN_RESPONSE" | sed '$d')
+    # Retry logic - sometimes the cache isn't populated yet when post-create runs
+    MAX_RETRIES=10
+    RETRY_DELAY=3
+    HTTP_CODE="404"
+
+    for attempt in $(seq 1 $MAX_RETRIES); do
+        echo "Attempt $attempt/$MAX_RETRIES..."
+
+        # Try to fetch design from configurator API
+        DESIGN_RESPONSE=$(curl -s -w "\n%{http_code}" "${CONFIGURATOR_API}/api/design/${CODESPACE_NAME}")
+        HTTP_CODE=$(echo "$DESIGN_RESPONSE" | tail -n1)
+        DESIGN_BODY=$(echo "$DESIGN_RESPONSE" | sed '$d')
+
+        if [ "$HTTP_CODE" = "200" ]; then
+            break
+        fi
+
+        if [ $attempt -lt $MAX_RETRIES ]; then
+            echo "Design not ready yet (HTTP $HTTP_CODE), waiting ${RETRY_DELAY}s..."
+            sleep $RETRY_DELAY
+        fi
+    done
 
     if [ "$HTTP_CODE" = "200" ]; then
         echo "✅ Design configuration found"
