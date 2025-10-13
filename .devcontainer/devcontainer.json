@@ -34,7 +34,7 @@
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
 
   // Run after codespace opens - only generates custom files (fast!)
-  "postCreateCommand": ".devcontainer/post-create.sh",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
 
   // Use 'postStartCommand' to run commands after the container starts
   "postStartCommand": "echo 'ChipFlow development environment is ready!'",
