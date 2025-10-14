@@ -55,13 +55,23 @@ if [ -n "$CODESPACE_NAME" ]; then
             mkdir -p design/software design/steps design/tests
 
             # Extract and save each file
-            echo "$FILES_RESPONSE" | jq -r '.files[] | @json' | while read -r file; do
+            # Use process substitution instead of pipe to avoid subshell issues
+            while read -r file; do
                 FILE_PATH=$(echo "$file" | jq -r '.path')
                 FILE_DIR=$(dirname "$FILE_PATH")
                 mkdir -p "$FILE_DIR"
+
+                # Force overwrite the file
                 echo "$file" | jq -r '.content' > "$FILE_PATH"
-                echo "  ✓ $FILE_PATH"
-            done
+
+                # Verify the file was written
+                if [ -f "$FILE_PATH" ]; then
+                    FILE_SIZE=$(wc -c < "$FILE_PATH")
+                    echo "  ✓ $FILE_PATH (${FILE_SIZE} bytes)"
+                else
+                    echo "  ✗ Failed to write $FILE_PATH"
+                fi
+            done < <(echo "$FILES_RESPONSE" | jq -r '.files[] | @json')
 
             echo "✅ Design files generated successfully"
         else
