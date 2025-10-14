@@ -74,6 +74,14 @@ if [ -n "$CODESPACE_NAME" ]; then
             done < <(echo "$FILES_RESPONSE" | jq -r '.files[] | @json')
 
             echo "✅ Design files generated successfully"
+
+            # Generate pins.lock file
+            echo "🔧 Generating pins.lock..."
+            if chipflow pin lock > /dev/null 2>&1; then
+                echo "✅ pins.lock generated"
+            else
+                echo "⚠️  Failed to generate pins.lock (will be created on first build)"
+            fi
         else
             echo "⚠️  Failed to generate design files from API"
             echo "   Using template defaults"
