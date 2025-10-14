@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     git \
     github-cli \
     jq \
+    linux-headers \
     nodejs \
     npm \
     py3-pip \
