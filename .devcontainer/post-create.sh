@@ -82,6 +82,14 @@ if [ -n "$CODESPACE_NAME" ]; then
             else
                 echo "⚠️  Failed to generate pins.lock (will be created on first build)"
             fi
+
+            # Warm yowasp-yosys cache
+            echo "🔥 Warming yowasp-yosys cache..."
+            if yowasp-yosys --version > /dev/null 2>&1; then
+                echo "✅ yowasp-yosys cache warmed"
+            else
+                echo "⚠️  Failed to warm yowasp-yosys cache (will download on first build)"
+            fi
         else
             echo "⚠️  Failed to generate design files from API"
             echo "   Using template defaults"

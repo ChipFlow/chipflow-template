@@ -8,6 +8,8 @@ RUN apk add --no-cache \
     git \
     github-cli \
     jq \
+    libgcc \
+    libstdc++ \
     linux-headers \
     nodejs \
     npm \
