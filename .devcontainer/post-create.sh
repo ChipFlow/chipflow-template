@@ -20,6 +20,14 @@ if [ -n "$CODESPACE_NAME" ]; then
     RETRY_DELAY=3
     HTTP_CODE="404"
 
+    # Warm yowasp-yosys cache
+    echo "🔥 Warming yowasp-yosys cache..."
+    if yowasp-yosys --version > /dev/null 2>&1; then
+        echo "✅ yowasp-yosys cache warmed"
+    else
+        echo "⚠️  Failed to warm yowasp-yosys cache (will download on first build)"
+    fi
+
     for attempt in $(seq 1 $MAX_RETRIES); do
         echo "Attempt $attempt/$MAX_RETRIES..."
 
@@ -81,14 +89,6 @@ if [ -n "$CODESPACE_NAME" ]; then
                 echo "✅ pins.lock generated"
             else
                 echo "⚠️  Failed to generate pins.lock (will be created on first build)"
-            fi
-
-            # Warm yowasp-yosys cache
-            echo "🔥 Warming yowasp-yosys cache..."
-            if yowasp-yosys --version > /dev/null 2>&1; then
-                echo "✅ yowasp-yosys cache warmed"
-            else
-                echo "⚠️  Failed to warm yowasp-yosys cache (will download on first build)"
             fi
         else
             echo "⚠️  Failed to generate design files from API"

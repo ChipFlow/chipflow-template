@@ -50,4 +50,3 @@ RUN --mount=type=bind,target=/src \
     echo PDM install && \
     pdm -vv -n install && \
     pdm config check_update false
-	
