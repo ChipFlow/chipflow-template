@@ -50,7 +50,7 @@ RUN --mount=type=bind,target=/src \
     cp /src/pyproject.toml . && \
     cp /src/pdm.lock . && \
     pdm config use_uv true && \
-    mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp /opt/chipflow-cache/zig && \
+    mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp /opt/chipflow-cache/zig /opt/chipflow-cache/uv && \
     pdm config cache_dir /opt/chipflow-cache/pdm && \
     export YOWASP_CACHE_DIR=/opt/chipflow-cache/yowasp && \
     export ZIG_GLOBAL_CACHE_DIR=/opt/chipflow-cache/zig && \
@@ -67,4 +67,6 @@ RUN --mount=type=bind,target=/src \
     pdm run chipflow pin lock && \
     pdm run chipflow sim build && \
     cd .. && \
-    rm -rf cache-warming-temp
+    rm -rf cache-warming-temp && \
+    echo "Copying uv cache to /opt/chipflow-cache" && \
+    cp -r ~/.cache/uv/* /opt/chipflow-cache/uv/

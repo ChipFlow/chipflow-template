@@ -20,6 +20,16 @@ if [ -n "$CODESPACE_NAME" ]; then
     RETRY_DELAY=3
     HTTP_CODE="404"
 
+    # Copy uv cache from Docker image (contains Python wheels - 800MB+)
+    echo "🔥 Copying uv cache..."
+    mkdir -p ~/.cache/uv
+    if [ -d /opt/chipflow-cache/uv ] && [ "$(ls -A /opt/chipflow-cache/uv)" ]; then
+        cp -r /opt/chipflow-cache/uv/* ~/.cache/uv/
+        echo "✅ uv cache copied"
+    else
+        echo "⚠️  No uv cache found"
+    fi
+
     # Copy PDM cache from Docker image
     echo "🔥 Copying PDM cache..."
     mkdir -p ~/.cache/pdm
