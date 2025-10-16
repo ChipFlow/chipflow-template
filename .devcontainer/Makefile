@@ -12,6 +12,7 @@ help:
 test:
 	@echo "Building devcontainer Docker image..."
 	@docker build \
+		--platform linux/amd64 \
 		--build-context src=.. \
 		-f Dockerfile \
 		-t chipflow-template-devcontainer-test \
@@ -19,7 +20,7 @@ test:
 	@echo "✅ Devcontainer build successful!"
 	@echo ""
 	@echo "To test interactively:"
-	@echo "  docker run -it chipflow-template-devcontainer-test /bin/bash"
+	@echo "  docker run -it --platform linux/amd64 chipflow-template-devcontainer-test /bin/bash"
 
 clean:
 	@echo "Cleaning Docker build cache..."

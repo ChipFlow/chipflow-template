@@ -20,12 +20,25 @@ if [ -n "$CODESPACE_NAME" ]; then
     RETRY_DELAY=3
     HTTP_CODE="404"
 
-    # Warm yowasp-yosys cache
-    echo "🔥 Warming yowasp-yosys cache..."
-    if yowasp-yosys --version > /dev/null 2>&1; then
-        echo "✅ yowasp-yosys cache warmed"
+    # Copy PDM cache from Docker image
+    echo "🔥 Copying PDM cache..."
+    mkdir -p ~/.cache/pdm
+    if [ -d /opt/chipflow-cache/pdm ] && [ "$(ls -A /opt/chipflow-cache/pdm)" ]; then
+        cp -r /opt/chipflow-cache/pdm/* ~/.cache/pdm/
+        echo "✅ PDM cache copied"
     else
-        echo "⚠️  Failed to warm yowasp-yosys cache (will download on first build)"
+        echo "⚠️  No PDM cache found"
+    fi
+    pdm config cache_dir ~/.cache/pdm
+
+    # Copy yowasp cache from Docker image
+    echo "🔥 Copying yowasp-yosys cache..."
+    mkdir -p ~/.cache/YoWASP
+    if [ -d /opt/chipflow-cache/yowasp ] && [ "$(ls -A /opt/chipflow-cache/yowasp)" ]; then
+        cp -r /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
+        echo "✅ yowasp-yosys cache copied"
+    else
+        echo "⚠️  No yowasp cache found"
     fi
 
     for attempt in $(seq 1 $MAX_RETRIES); do
