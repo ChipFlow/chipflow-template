@@ -19,7 +19,11 @@
           "*.py": "python"
         },
         "terminal.integrated.defaultProfile.linux": "bash",
-        "remote.autoForwardPorts": false
+        "terminal.integrated.fontSize": 14,
+        "remote.autoForwardPorts": false,
+        "github.copilot.enable": false,
+        "github.copilot.inlineSuggest.enable": false,
+        "chat.commandCenter.enabled": false
       },
       "extensions": [
         "ms-python.python"
@@ -27,8 +31,8 @@
     }
   },
 
-  // Use 'forwardPorts' to expose ports locally
-  "forwardPorts": [8000, 8080, 3000],
+  // Port forwarding disabled - users can manually forward ports if needed
+  // "forwardPorts": [8000, 8080, 3000],
 
   // Run during prebuild - installs Python dependencies (cached!)
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
