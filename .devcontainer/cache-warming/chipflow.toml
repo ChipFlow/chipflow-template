@@ -1,0 +1,13 @@
+# Minimal ChipFlow configuration for Docker cache warming
+# This design is built during Docker image creation to pre-compile
+# Zig toolchain and warm the build cache
+
+[chipflow]
+project_name = "cache-warming"
+
+[chipflow.top]
+soc = "design:MySoC"
+
+[chipflow.silicon]
+process = "sky130"
+package = "openframe"

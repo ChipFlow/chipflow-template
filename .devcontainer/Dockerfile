@@ -38,7 +38,9 @@ WORKDIR /home/user
 # Install and setup PDM for user
 ENV PATH="/home/user/.local/bin:$PATH"
 ENV PDM_VENV_IN_PROJECT=1
- 
+
+# Copy cache-warming design (as user, before RUN so it's in the image)
+COPY --chown=user:user cache-warming /home/user/cache-warming-temp
 
 RUN --mount=type=bind,target=/src \
     curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
@@ -48,9 +50,10 @@ RUN --mount=type=bind,target=/src \
     cp /src/pyproject.toml . && \
     cp /src/pdm.lock . && \
     pdm config use_uv true && \
-    mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp && \
+    mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp /opt/chipflow-cache/zig && \
     pdm config cache_dir /opt/chipflow-cache/pdm && \
     export YOWASP_CACHE_DIR=/opt/chipflow-cache/yowasp && \
+    export ZIG_GLOBAL_CACHE_DIR=/opt/chipflow-cache/zig && \
     echo python $(python --version) && \
     echo PDM Config && \
     pdm -vv config && \
@@ -58,4 +61,10 @@ RUN --mount=type=bind,target=/src \
     pdm -vv -n install && \
     pdm config check_update false && \
     echo "Warming yowasp-yosys cache" && \
-    pdm run yowasp-yosys --version
+    pdm run yowasp-yosys --version && \
+    echo "Warming zig cache" && \
+    cd cache-warming-temp && \
+    pdm run chipflow pin lock && \
+    pdm run chipflow sim build && \
+    cd .. && \
+    rm -rf cache-warming-temp
