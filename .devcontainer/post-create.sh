@@ -4,6 +4,9 @@ set -e
 
 echo "🚀 ChipFlow codespace starting..."
 
+# simple prompt..
+export PS1="\W\$ "
+
 # Ensure PDM is in PATH and venv auto-activation is configured
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
