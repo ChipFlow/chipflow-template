@@ -30,6 +30,8 @@ RUN mkdir -p /opt/chipflow-cache && \
     chown -R user:user /opt/chipflow-cache
 
 COPY first-run-notice.txt /usr/local/etc/vscode-dev-containers/first-run-notice.txt
+COPY post-create.sh /usr/local/share/post-create.sh
+RUN chmod +x /usr/local/share/post-create.sh
 
 # Switch to user
 USER user
@@ -47,6 +49,12 @@ RUN --mount=type=bind,target=/src \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
     echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc && \
+    echo '' >> ~/.bashrc && \
+    echo '# Run post-create setup once per codespace' >> ~/.bashrc && \
+    echo 'if [ ! -f ~/.post-create-complete ] && [ -f /usr/local/share/post-create.sh ]; then' >> ~/.bashrc && \
+    echo '    /usr/local/share/post-create.sh' >> ~/.bashrc && \
+    echo '    touch ~/.post-create-complete' >> ~/.bashrc && \
+    echo 'fi' >> ~/.bashrc && \
     cp /src/pyproject.toml . && \
     cp /src/pdm.lock . && \
     pdm config use_uv true && \

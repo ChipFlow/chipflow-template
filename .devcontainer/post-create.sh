@@ -20,27 +20,27 @@ if [ -n "$CODESPACE_NAME" ]; then
     RETRY_DELAY=3
     HTTP_CODE="404"
 
-    # Copy uv cache from Docker image (contains Python wheels - 800MB+)
-    echo "🔥 Copying uv cache..."
-    mkdir -p ~/.cache/uv
-    if [ -d /opt/chipflow-cache/uv ] && [ "$(ls -A /opt/chipflow-cache/uv)" ]; then
-          cp -r /opt/chipflow-cache/uv/* ~/.cache/uv/
-        echo "✅ uv cache copied"
-    else
-        echo "⚠️  No uv cache found"
-    fi
-
-    # Copy PDM cache from Docker image
-    echo "🔥 Copying PDM cache..."
-    mkdir -p ~/.cache/pdm
-    if [ -d /opt/chipflow-cache/pdm ] && [ "$(ls -A /opt/chipflow-cache/pdm)" ]; then
-        cp -r /opt/chipflow-cache/pdm/* ~/.cache/pdm/
-        echo "✅ PDM cache copied"
-    else
-        echo "⚠️  No PDM cache found"
-    fi
-    pdm config cache_dir ~/.cache/pdm
-
+#    # Copy uv cache from Docker image (contains Python wheels - 800MB+)
+#    echo "🔥 Copying uv cache..."
+#    mkdir -p ~/.cache/uv
+#    if [ -d /opt/chipflow-cache/uv ] && [ "$(ls -A /opt/chipflow-cache/uv)" ]; then
+#          cp -r /opt/chipflow-cache/uv/* ~/.cache/uv/
+#        echo "✅ uv cache copied"
+#    else
+#        echo "⚠️  No uv cache found"
+#    fi
+#
+#    # Copy PDM cache from Docker image
+#    echo "🔥 Copying PDM cache..."
+#    mkdir -p ~/.cache/pdm
+#    if [ -d /opt/chipflow-cache/pdm ] && [ "$(ls -A /opt/chipflow-cache/pdm)" ]; then
+#        cp -r /opt/chipflow-cache/pdm/* ~/.cache/pdm/
+#        echo "✅ PDM cache copied"
+#    else
+#        echo "⚠️  No PDM cache found"
+#    fi
+#    pdm config cache_dir ~/.cache/pdm
+#
     # Copy yowasp cache from Docker image
     echo "🔥 Copying yowasp-yosys cache..."
     mkdir -p ~/.cache/YoWASP
