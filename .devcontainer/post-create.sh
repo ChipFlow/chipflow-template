@@ -24,7 +24,14 @@ if [ -n "$CODESPACE_NAME" ]; then
     echo "🔥 Copying uv cache..."
     mkdir -p ~/.cache/uv
     if [ -d /opt/chipflow-cache/uv ] && [ "$(ls -A /opt/chipflow-cache/uv)" ]; then
-        cp -r /opt/chipflow-cache/uv/* ~/.cache/uv/
+        # Use rsync or cp with chmod to avoid permission issues with git objects
+        if command -v rsync >/dev/null 2>&1; then
+            rsync -a --chmod=u+w /opt/chipflow-cache/uv/ ~/.cache/uv/
+        else
+            cp -r /opt/chipflow-cache/uv/* ~/.cache/uv/
+            # Fix permissions on copied files (git objects are read-only)
+            find ~/.cache/uv -type f -exec chmod u+w {} + 2>/dev/null || true
+        fi
         echo "✅ uv cache copied"
     else
         echo "⚠️  No uv cache found"
