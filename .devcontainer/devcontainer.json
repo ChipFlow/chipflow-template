@@ -23,7 +23,8 @@
         "remote.autoForwardPorts": false,
         "github.copilot.enable": false,
         "github.copilot.inlineSuggest.enable": false,
-        "chat.commandCenter.enabled": false
+        "chat.commandCenter.enabled": false,
+	"chat.agent.enabled": false
       },
       "extensions": [
         "ms-python.python"
