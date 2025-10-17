@@ -4,6 +4,16 @@ set -e
 
 echo "🚀 ChipFlow codespace starting..."
 
+# disable copilot
+cat << EOF > ~/.vscode.settings
+{
+  "github.copilot.enable": false,
+  "github.copilot.inlineSuggest.enable": false,
+  "chat.commandCenter.enabled": false,
+  "workbench.secondarySideBar.defaultVisibility": "hidden"
+}
+EOF
+
 # simple prompt..
 export PS1="\W\$ "
 

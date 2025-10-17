@@ -27,7 +27,8 @@
 	"chat.agent.enabled": false
       },
       "extensions": [
-        "ms-python.python"
+        "ms-python.python",
+        "-github.copilot-chat"
       ]
     }
   },
