@@ -45,7 +45,7 @@ if [ -n "$CODESPACE_NAME" ]; then
     echo "🔥 Copying yowasp-yosys cache..."
     mkdir -p ~/.cache/YoWASP
     if [ -d /opt/chipflow-cache/yowasp ] && [ "$(ls -A /opt/chipflow-cache/yowasp)" ]; then
-        cp -r /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
+        cp -rf /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
         echo "✅ yowasp-yosys cache copied"
     else
         echo "⚠️  No yowasp cache found"
@@ -55,7 +55,7 @@ if [ -n "$CODESPACE_NAME" ]; then
     echo "🔥 Copying zig cache..."
     mkdir -p ~/.cache/zig
     if [ -d /opt/chipflow-cache/zig ] && [ "$(ls -A /opt/chipflow-cache/zig)" ]; then
-        cp -r /opt/chipflow-cache/zig/* ~/.cache/zig/
+        cp -rf /opt/chipflow-cache/zig/* ~/.cache/zig/
         echo "✅ zig cache copied"
     else
         echo "⚠️  No zig cache found"
