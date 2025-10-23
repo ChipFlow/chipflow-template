@@ -40,13 +40,13 @@
   // Run during prebuild - installs Python dependencies (cached!)
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
 
-  // Post-create logic runs via .bashrc to avoid race condition with user terminal
-  // See: https://code.visualstudio.com/remote/advancedcontainers/start-processes#_adding-startup-commands-to-the-docker-image-instead
+  // Run post-create setup asynchronously (runs in background, doesn't block terminal)
+  "postCreateCommand": "nohup bash /usr/local/share/post-create.sh > /tmp/post-create.log 2>&1 &",
 
-  // Use 'postStartCommand' to run commands after the container starts
-  "postStartCommand": "echo 'ChipFlow development environment is ready!'",
+  // Open README.md when container starts
+  "postStartCommand": "code README.md",
 
-  // Open README.md when user attaches to the codespace
+  // This is needed to ensure README opens on attach as well
   "postAttachCommand": "code README.md",
 
   // Container optimizations
