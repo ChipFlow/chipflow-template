@@ -160,6 +160,36 @@ if [ -f ".venv/bin/activate" ]; then
     echo "✅ PDM virtual environment is active"
     echo ""
 fi
+
+# Display welcome page URL if available
+if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📖 Getting Started Guide"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "🌐 Opening welcome page in browser..."
+    echo "   $CHIPFLOW_WELCOME_URL"
+    echo ""
+    echo "   The page includes:"
+    echo "   • Your design configuration"
+    echo "   • Copy-paste commands to get started"
+    echo "   • Links to documentation"
+    echo ""
+
+    # Auto-open in browser (GitHub Codespaces command)
+    # This works in both web and desktop VS Code Codespaces
+    if command -v gp >/dev/null 2>&1; then
+        # Gitpod/Codespaces browser opener
+        gp preview "$CHIPFLOW_WELCOME_URL" >/dev/null 2>&1 &
+    elif command -v python3 >/dev/null 2>&1; then
+        # Fallback: use python webbrowser module
+        python3 -c "import webbrowser; webbrowser.open('$CHIPFLOW_WELCOME_URL')" >/dev/null 2>&1 &
+    fi
+
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+fi
+
 echo "Quick commands:"
 echo "  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation"
 echo "  • chipflow --help - ChipFlow CLI help"

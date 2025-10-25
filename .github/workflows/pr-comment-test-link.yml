@@ -1,0 +1,70 @@
+name: PR Comment - Test Link
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  comment-test-link:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Comment test link
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const prNumber = context.payload.pull_request.number;
+            const testUrl = `https://configurator.chipflow.io/?template_branch=${encodeURIComponent(branch)}`;
+
+            const comment = `## 🧪 Test this PR in a Codespace
+
+            Use the configurator with this PR's devcontainer changes:
+
+            **[Open Configurator with branch: \`${branch}\`](${testUrl})**
+
+            This will create a codespace using the devcontainer configuration from this PR branch.
+
+            ### How to test:
+            1. Click the link above
+            2. Configure your chip design in the configurator
+            3. Click "Generate & Simulate"
+            4. Authenticate with GitHub if prompted
+            5. A codespace will be created using the devcontainer from \`${branch}\`
+            6. Verify the codespace UX and functionality
+
+            ---
+
+            💡 **Tip:** You can also manually append \`?template_branch=${encodeURIComponent(branch)}\` to any configurator URL to test this branch.`;
+
+            // Check if we already commented
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user?.type === 'Bot' &&
+              comment.body?.includes('Test this PR in a Codespace')
+            );
+
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: comment
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: comment
+              });
+            }
