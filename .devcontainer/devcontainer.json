@@ -43,12 +43,6 @@
   // Run post-create setup asynchronously (runs in background, doesn't block terminal)
   "postCreateCommand": "nohup bash /usr/local/share/post-create.sh > /tmp/post-create.log 2>&1 &",
 
-  // Open README.md when container starts
-  "postStartCommand": "code README.md",
-
-  // This is needed to ensure README opens on attach as well
-  "postAttachCommand": "code README.md",
-
   // Container optimizations
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
