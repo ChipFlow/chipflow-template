@@ -14,9 +14,6 @@ cat << EOF > ~/.vscode.settings
 }
 EOF
 
-# simple prompt..
-export PS1="\W\$ "
-
 # Ensure PDM is in PATH and venv auto-activation is configured
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
@@ -55,20 +52,17 @@ if [ -n "$CODESPACE_NAME" ]; then
 #    pdm config cache_dir ~/.cache/pdm
 #
     # Copy yowasp cache from Docker image
-    echo "🔥 Copying yowasp-yosys cache..."
+    echo "🔥 Synchronizing caches..."
     if [ -d /opt/chipflow-cache/yowasp ] && [ "$(ls -A /opt/chipflow-cache/yowasp)" ]; then
-        rm -rf ~/.cache/YoWASP
         mkdir -p ~/.cache/YoWASP
-        cp -r /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
+        rsync /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
         echo "✅ yowasp-yosys cache copied"
     else
         echo "⚠️  No yowasp cache found"
     fi
 
     # Copy zig cache from Docker image
-    echo "🔥 Copying zig cache..."
     if [ -d /opt/chipflow-cache/zig ] && [ "$(ls -A /opt/chipflow-cache/zig)" ]; then
-        rm -rf ~/.cache/zig
         mkdir -p ~/.cache/zig
         cp -r /opt/chipflow-cache/zig/* ~/.cache/zig/
         echo "✅ zig cache copied"
