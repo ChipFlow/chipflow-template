@@ -22,7 +22,7 @@ eval "$(pdm venv activate in-project 2>/dev/null || true)"
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
 
 # save to bashrc
-echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURTOR_API\"" >> ~/.bashrc && \
+echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURTOR_API\"" >> ~/.bashrc
 
 # Check if we're in a codespace and can fetch design from configurator
 if [ -n "$CODESPACE_NAME" ]; then
@@ -183,7 +183,7 @@ if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
     echo ""
 
     # save welcome url in bashrc
-    echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc && \
+    echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc
 fi
 
 echo "Quick commands:"
