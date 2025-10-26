@@ -21,6 +21,9 @@ eval "$(pdm venv activate in-project 2>/dev/null || true)"
 # Configurator API base URL (can be overridden via environment)
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
 
+# save to bashrc
+echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURTOR_API\"" >> ~/.bashrc && \
+
 # Check if we're in a codespace and can fetch design from configurator
 if [ -n "$CODESPACE_NAME" ]; then
     echo "📡 Fetching design configuration for codespace: $CODESPACE_NAME"
@@ -55,22 +58,19 @@ if [ -n "$CODESPACE_NAME" ]; then
     echo "🔥 Synchronizing caches..."
     if [ -d /opt/chipflow-cache/yowasp ] && [ "$(ls -A /opt/chipflow-cache/yowasp)" ]; then
         mkdir -p ~/.cache/YoWASP
-        rsync /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
-        echo "✅ yowasp-yosys cache copied"
+        rsync -tr /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/ && echo "  ✅ yowasp-yosys cache copied"
     else
-        echo "⚠️  No yowasp cache found"
+        echo "  ⚠️  No yowasp cache found"
     fi
 
     # Copy zig cache from Docker image
     if [ -d /opt/chipflow-cache/zig ] && [ "$(ls -A /opt/chipflow-cache/zig)" ]; then
         mkdir -p ~/.cache/zig
-        cp -r /opt/chipflow-cache/zig/* ~/.cache/zig/
-        echo "✅ zig cache copied"
+        rsync -tr /opt/chipflow-cache/zig/* ~/.cache/zig/ && echo "  ✅ zig cache copied"
     else
-        echo "⚠️  No zig cache found"
+        echo "  ⚠️  No zig cache found"
     fi
 
-    echo "✅ Fixing cache permissions"
     chmod -R u+w ~/.cache
 
     for attempt in $(seq 1 $MAX_RETRIES); do
@@ -182,6 +182,9 @@ if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
 
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
+
+    # save welcome url in bashrc
+    echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc && \
 fi
 
 echo "Quick commands:"
