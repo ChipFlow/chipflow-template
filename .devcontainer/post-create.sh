@@ -192,4 +192,3 @@ echo ""
 echo "Entering venv:"
 pdm config check_update false
 eval $(pdm venv activate)
-cat .devcontainer/first-run-notice.txt
