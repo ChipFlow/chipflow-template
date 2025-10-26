@@ -18,11 +18,8 @@ EOF
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
 
-# Configurator API base URL (can be overridden via environment)
+# Configurator API base URL (will be set from design config if in codespace)
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
-
-# save to bashrc
-echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURTOR_API\"" >> ~/.bashrc
 
 # Check if we're in a codespace and can fetch design from configurator
 if [ -n "$CODESPACE_NAME" ]; then
@@ -95,6 +92,19 @@ if [ -n "$CODESPACE_NAME" ]; then
 
         # Save design.json
         echo "$DESIGN_BODY" | jq -r '.designData' > design.json
+
+        # Extract config from response (contains configuratorApi and welcomeUrl)
+        CHIPFLOW_CONFIGURATOR_API=$(echo "$DESIGN_BODY" | jq -r '.config.configuratorApi // "https://configurator.chipflow.io"')
+        CHIPFLOW_WELCOME_URL=$(echo "$DESIGN_BODY" | jq -r '.config.welcomeUrl // empty')
+
+        # Update CONFIGURATOR_API with value from config
+        CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
+
+        # Save to bashrc for future terminal sessions
+        echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURATOR_API\"" >> ~/.bashrc
+        if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
+            echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc
+        fi
 
         # Fetch generated files from API
         echo "🔨 Generating design files..."
@@ -181,9 +191,6 @@ if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
 
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-
-    # save welcome url in bashrc
-    echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc
 fi
 
 echo "Quick commands:"
