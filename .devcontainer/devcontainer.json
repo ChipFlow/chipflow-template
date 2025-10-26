@@ -25,8 +25,10 @@
         "github.copilot.inlineSuggest.enable": false,
         "chat.commandCenter.enabled": false,
         "chat.agent.enabled": false,
+	"chat.disableAIFeatures": true,
         "workbench.startupEditor": "readme",
-        "extensions.ignoreRecommendations": true
+        "extensions.ignoreRecommendations": true,
+        "git.autofetch": false
       },
       "extensions": [
         "ms-python.python",
