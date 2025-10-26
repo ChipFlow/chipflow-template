@@ -71,7 +71,6 @@ if [ -n "$CODESPACE_NAME" ]; then
         echo "  ⚠️  No zig cache found"
     fi
 
-    chmod -R u+w ~/.cache
 
     for attempt in $(seq 1 $MAX_RETRIES); do
         echo "Attempt $attempt/$MAX_RETRIES..."
