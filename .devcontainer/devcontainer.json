@@ -40,9 +40,6 @@
   // Run during prebuild - installs Python dependencies (cached!)
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
 
-  // Run post-create setup asynchronously (runs in background, doesn't block terminal)
-  "postCreateCommand": "nohup bash /usr/local/share/post-create.sh > /tmp/post-create.log 2>&1 &",
-
   // Container optimizations
   "containerEnv": {
     "PYTHONUNBUFFERED": "1",
