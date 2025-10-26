@@ -25,11 +25,13 @@
         "github.copilot.inlineSuggest.enable": false,
         "chat.commandCenter.enabled": false,
         "chat.agent.enabled": false,
-        "workbench.startupEditor": "readme"
+        "workbench.startupEditor": "readme",
+        "extensions.ignoreRecommendations": true
       },
       "extensions": [
         "ms-python.python",
-        "-github.copilot-chat"
+        "-github.copilot-chat",
+        "github.vscode-github-actions"
       ]
     }
   },
