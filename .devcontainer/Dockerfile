@@ -48,7 +48,7 @@ RUN --mount=type=bind,target=/src \
     curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
-    echo 'export PS1="\W\$"' >> ~/.bashrc && \
+    echo 'export PS1="\W\$ "' >> ~/.bashrc && \
     echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc && \
     echo '' >> ~/.bashrc && \
     echo '# Run post-create setup once per codespace' >> ~/.bashrc && \
