@@ -37,7 +37,8 @@
       "extensions": [
         "ms-python.python",
         "-github.copilot-chat",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "crimson206.vscode-command-server"
       ]
     }
   },

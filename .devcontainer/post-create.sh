@@ -194,11 +194,23 @@ if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
     echo ""
 
     # Auto-open in VS Code Simple Browser (embeds in editor instead of new tab)
-    if command -v code >/dev/null 2>&1; then
-        # Use VS Code CLI to open in Simple Browser
-        # URL encode the welcome URL for the vscode:// scheme
-        ENCODED_URL=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$CHIPFLOW_WELCOME_URL', safe=''))")
-        code --open-url "vscode://simpleBrowser.show?url=$ENCODED_URL" >/dev/null 2>&1 &
+    # Use vscode-command-server extension to execute simpleBrowser.api.open command
+    # This avoids creating a new codespace which happens with code --open-url
+
+    # Wait for command server to be ready (max 10 seconds)
+    echo "   Waiting for VS Code command server..."
+    for i in $(seq 1 10); do
+        if curl -s http://localhost:3000/health >/dev/null 2>&1; then
+            break
+        fi
+        sleep 1
+    done
+
+    # Try to open in Simple Browser via command server API
+    if curl -s -X POST -H "Content-Type: application/json" \
+        -d "{\"command\":\"simpleBrowser.api.open\", \"args\": [\"$CHIPFLOW_WELCOME_URL\"]}" \
+        http://localhost:3000/execute >/dev/null 2>&1; then
+        echo "   ✓ Opened in VS Code Simple Browser"
     elif command -v gp >/dev/null 2>&1; then
         # Fallback: Gitpod/Codespaces browser opener (opens in new tab)
         gp preview "$CHIPFLOW_WELCOME_URL" >/dev/null 2>&1 &
