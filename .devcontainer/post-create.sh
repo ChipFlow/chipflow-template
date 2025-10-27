@@ -193,13 +193,17 @@ if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
     echo "   • Links to documentation"
     echo ""
 
-    # Auto-open in browser (GitHub Codespaces command)
-    # This works in both web and desktop VS Code Codespaces
-    if command -v gp >/dev/null 2>&1; then
-        # Gitpod/Codespaces browser opener
+    # Auto-open in VS Code Simple Browser (embeds in editor instead of new tab)
+    if command -v code >/dev/null 2>&1; then
+        # Use VS Code CLI to open in Simple Browser
+        # URL encode the welcome URL for the vscode:// scheme
+        ENCODED_URL=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$CHIPFLOW_WELCOME_URL', safe=''))")
+        code --open-url "vscode://simpleBrowser.show?url=$ENCODED_URL" >/dev/null 2>&1 &
+    elif command -v gp >/dev/null 2>&1; then
+        # Fallback: Gitpod/Codespaces browser opener (opens in new tab)
         gp preview "$CHIPFLOW_WELCOME_URL" >/dev/null 2>&1 &
     elif command -v python3 >/dev/null 2>&1; then
-        # Fallback: use python webbrowser module
+        # Fallback: use python webbrowser module (opens in new tab)
         python3 -c "import webbrowser; webbrowser.open('$CHIPFLOW_WELCOME_URL')" >/dev/null 2>&1 &
     fi
 
