@@ -28,7 +28,10 @@
 	"chat.disableAIFeatures": true,
         "workbench.startupEditor": "readme",
         "extensions.ignoreRecommendations": true,
-        "git.autofetch": false
+        "git.autofetch": false,
+        "http.linkProtectionTrustedDomains": [
+          "configurator.chipflow.io"
+        ]
       },
       "extensions": [
         "ms-python.python",
