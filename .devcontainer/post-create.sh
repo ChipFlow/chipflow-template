@@ -14,14 +14,11 @@ cat << EOF > ~/.vscode.settings
 }
 EOF
 
-# simple prompt..
-export PS1="\W\$ "
-
 # Ensure PDM is in PATH and venv auto-activation is configured
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
 
-# Configurator API base URL (can be overridden via environment)
+# Configurator API base URL (will be set from design config if in codespace)
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
 
 # Check if we're in a codespace and can fetch design from configurator
@@ -55,29 +52,22 @@ if [ -n "$CODESPACE_NAME" ]; then
 #    pdm config cache_dir ~/.cache/pdm
 #
     # Copy yowasp cache from Docker image
-    echo "🔥 Copying yowasp-yosys cache..."
+    echo "🔥 Synchronizing caches..."
     if [ -d /opt/chipflow-cache/yowasp ] && [ "$(ls -A /opt/chipflow-cache/yowasp)" ]; then
-        rm -rf ~/.cache/YoWASP
         mkdir -p ~/.cache/YoWASP
-        cp -r /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/
-        echo "✅ yowasp-yosys cache copied"
+        rsync -tr /opt/chipflow-cache/yowasp/* ~/.cache/YoWASP/ && echo "  ✅ yowasp-yosys cache copied"
     else
-        echo "⚠️  No yowasp cache found"
+        echo "  ⚠️  No yowasp cache found"
     fi
 
     # Copy zig cache from Docker image
-    echo "🔥 Copying zig cache..."
     if [ -d /opt/chipflow-cache/zig ] && [ "$(ls -A /opt/chipflow-cache/zig)" ]; then
-        rm -rf ~/.cache/zig
         mkdir -p ~/.cache/zig
-        cp -r /opt/chipflow-cache/zig/* ~/.cache/zig/
-        echo "✅ zig cache copied"
+        rsync -tr /opt/chipflow-cache/zig/* ~/.cache/zig/ && echo "  ✅ zig cache copied"
     else
-        echo "⚠️  No zig cache found"
+        echo "  ⚠️  No zig cache found"
     fi
 
-    echo "✅ Fixing cache permissions"
-    chmod -R u+w ~/.cache
 
     for attempt in $(seq 1 $MAX_RETRIES); do
         echo "Attempt $attempt/$MAX_RETRIES..."
@@ -102,6 +92,33 @@ if [ -n "$CODESPACE_NAME" ]; then
 
         # Save design.json
         echo "$DESIGN_BODY" | jq -r '.designData' > design.json
+
+        # Extract config from response (contains configuratorApi and welcomeUrl)
+        CHIPFLOW_CONFIGURATOR_API=$(echo "$DESIGN_BODY" | jq -r '.config.configuratorApi // "https://configurator.chipflow.io"')
+        CHIPFLOW_WELCOME_URL=$(echo "$DESIGN_BODY" | jq -r '.config.welcomeUrl // empty')
+
+        # Export to current environment
+        export CHIPFLOW_CONFIGURATOR_API
+        export CHIPFLOW_WELCOME_URL
+
+        # Update CONFIGURATOR_API with value from config
+        CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
+
+        # Save to .env file for sourcing by new terminals
+        cat > ~/.chipflow.env << EOF
+export CHIPFLOW_CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
+export CHIPFLOW_WELCOME_URL="$CHIPFLOW_WELCOME_URL"
+EOF
+
+        # Source the env file from bashrc if not already done
+        if ! grep -q "source ~/.chipflow.env" ~/.bashrc 2>/dev/null; then
+            echo "" >> ~/.bashrc
+            echo "# ChipFlow configuration (auto-generated)" >> ~/.bashrc
+            echo "if [ -f ~/.chipflow.env ]; then source ~/.chipflow.env; fi" >> ~/.bashrc
+        fi
+
+        # Source immediately for current session
+        source ~/.chipflow.env
 
         # Fetch generated files from API
         echo "🔨 Generating design files..."
@@ -160,6 +177,36 @@ if [ -f ".venv/bin/activate" ]; then
     echo "✅ PDM virtual environment is active"
     echo ""
 fi
+
+# Display welcome page URL if available
+if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📖 Getting Started Guide"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "🌐 Opening welcome page in browser..."
+    echo "   $CHIPFLOW_WELCOME_URL"
+    echo ""
+    echo "   The page includes:"
+    echo "   • Your design configuration"
+    echo "   • Copy-paste commands to get started"
+    echo "   • Links to documentation"
+    echo ""
+
+    # Auto-open in browser (GitHub Codespaces command)
+    # This works in both web and desktop VS Code Codespaces
+    if command -v gp >/dev/null 2>&1; then
+        # Gitpod/Codespaces browser opener
+        gp preview "$CHIPFLOW_WELCOME_URL" >/dev/null 2>&1 &
+    elif command -v python3 >/dev/null 2>&1; then
+        # Fallback: use python webbrowser module
+        python3 -c "import webbrowser; webbrowser.open('$CHIPFLOW_WELCOME_URL')" >/dev/null 2>&1 &
+    fi
+
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+fi
+
 echo "Quick commands:"
 echo "  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation"
 echo "  • chipflow --help - ChipFlow CLI help"
@@ -168,4 +215,3 @@ echo ""
 echo "Entering venv:"
 pdm config check_update false
 eval $(pdm venv activate)
-cat .devcontainer/first-run-notice.txt
