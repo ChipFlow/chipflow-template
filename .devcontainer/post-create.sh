@@ -97,6 +97,10 @@ if [ -n "$CODESPACE_NAME" ]; then
         CHIPFLOW_CONFIGURATOR_API=$(echo "$DESIGN_BODY" | jq -r '.config.configuratorApi // "https://configurator.chipflow.io"')
         CHIPFLOW_WELCOME_URL=$(echo "$DESIGN_BODY" | jq -r '.config.welcomeUrl // empty')
 
+        # Export to current environment
+        export CHIPFLOW_CONFIGURATOR_API
+        export CHIPFLOW_WELCOME_URL
+
         # Update CONFIGURATOR_API with value from config
         CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
 
