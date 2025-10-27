@@ -104,11 +104,21 @@ if [ -n "$CODESPACE_NAME" ]; then
         # Update CONFIGURATOR_API with value from config
         CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
 
-        # Save to bashrc for future terminal sessions
-        echo "export CHIPFLOW_CONFIGURATOR_API=\"$CHIPFLOW_CONFIGURATOR_API\"" >> ~/.bashrc
-        if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
-            echo "export CHIPFLOW_WELCOME_URL=\"$CHIPFLOW_WELCOME_URL\"" >> ~/.bashrc
+        # Save to .env file for sourcing by new terminals
+        cat > ~/.chipflow.env << EOF
+export CHIPFLOW_CONFIGURATOR_API="$CHIPFLOW_CONFIGURATOR_API"
+export CHIPFLOW_WELCOME_URL="$CHIPFLOW_WELCOME_URL"
+EOF
+
+        # Source the env file from bashrc if not already done
+        if ! grep -q "source ~/.chipflow.env" ~/.bashrc 2>/dev/null; then
+            echo "" >> ~/.bashrc
+            echo "# ChipFlow configuration (auto-generated)" >> ~/.bashrc
+            echo "if [ -f ~/.chipflow.env ]; then source ~/.chipflow.env; fi" >> ~/.bashrc
         fi
+
+        # Source immediately for current session
+        source ~/.chipflow.env
 
         # Fetch generated files from API
         echo "🔨 Generating design files..."
