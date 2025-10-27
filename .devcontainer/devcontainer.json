@@ -30,7 +30,8 @@
         "extensions.ignoreRecommendations": true,
         "git.autofetch": false,
         "http.linkProtectionTrustedDomains": [
-          "configurator.chipflow.io"
+          "configurator.chipflow.io",
+          "*.configurator.chipflow-infra.com"
         ]
       },
       "extensions": [
