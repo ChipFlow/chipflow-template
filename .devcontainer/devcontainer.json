@@ -43,8 +43,14 @@
     }
   },
 
-  // Port forwarding disabled - users can manually forward ports if needed
-  // "forwardPorts": [8000, 8080, 3000],
+  // Port forwarding for vscode-command-server (required for Simple Browser link opening)
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "VS Code Command Server",
+      "onAutoForward": "silent"
+    }
+  },
 
   // Run during prebuild - installs Python dependencies (cached!)
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
