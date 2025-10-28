@@ -23,12 +23,18 @@ const server = http.createServer((req, res) => {
   }
 
   // Forward request to vscode-command-server
+  // Clean up headers - remove Host and origin-related headers that would confuse the target
+  const headers = { ...req.headers };
+  delete headers.host;
+  delete headers.origin;
+  delete headers.referer;
+
   const options = {
     hostname: TARGET_HOST,
     port: TARGET_PORT,
     path: req.url,
     method: req.method,
-    headers: req.headers,
+    headers: headers,
   };
 
   const proxy = http.request(options, (proxyRes) => {
