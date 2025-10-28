@@ -49,6 +49,6 @@ const server = http.createServer((req, res) => {
   req.pipe(proxy);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`CORS proxy running on port ${PORT}, forwarding to ${TARGET_HOST}:${TARGET_PORT}`);
 });
