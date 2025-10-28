@@ -44,10 +44,14 @@
   },
 
   // Port forwarding for vscode-command-server (required for Simple Browser link opening)
-  "forwardPorts": [3000],
+  "forwardPorts": [3000, 3001],
   "portsAttributes": {
     "3000": {
       "label": "VS Code Command Server",
+      "onAutoForward": "silent"
+    },
+    "3001": {
+      "label": "Command Server CORS Proxy",
       "onAutoForward": "silent"
     }
   },

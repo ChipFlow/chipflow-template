@@ -18,6 +18,11 @@ EOF
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
 
+# Start CORS proxy for vscode-command-server (enables Simple Browser link opening)
+echo "🔧 Starting command server CORS proxy..."
+node .devcontainer/command-server-proxy.js > /tmp/command-server-proxy.log 2>&1 &
+echo "✅ CORS proxy started on port 3001"
+
 # Configurator API base URL (will be set from design config if in codespace)
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
 
