@@ -18,7 +18,10 @@ const ALLOWED_COMMANDS = [
 // Security: Only allow requests from these origins
 const ALLOWED_ORIGINS = [
   'https://configurator.chipflow.io',
-  'https://configurator.chipflow-infra.com'
+  'https://configurator.chipflow-infra.com',
+  // GitHub Codespaces domains (for Simple Browser)
+  'https://*.github.dev',
+  'https://*.githubpreview.dev'
 ];
 
 // Security: Only allow HTTPS URLs from these domains
@@ -31,9 +34,17 @@ const ALLOWED_URL_DOMAINS = [
 
 function isAllowedOrigin(origin) {
   if (!origin) return false;
-  return ALLOWED_ORIGINS.some(allowed =>
-    origin === allowed || origin.startsWith(allowed + '.')
-  );
+
+  return ALLOWED_ORIGINS.some(allowed => {
+    // Handle wildcard patterns
+    if (allowed.includes('*')) {
+      const pattern = allowed.replace(/\./g, '\\.').replace(/\*/g, '[^.]+');
+      const regex = new RegExp(`^${pattern}$`);
+      return regex.test(origin);
+    }
+    // Exact match or subdomain match
+    return origin === allowed || origin.startsWith(allowed.replace('https://', 'https://') + '.');
+  });
 }
 
 function isAllowedUrl(url) {
