@@ -48,11 +48,13 @@
   "portsAttributes": {
     "3000": {
       "label": "VS Code Command Server",
-      "onAutoForward": "silent"
+      "onAutoForward": "silent",
+      "visibility": "public"
     },
     "3001": {
       "label": "Command Server CORS Proxy",
-      "onAutoForward": "silent"
+      "onAutoForward": "silent",
+      "visibility": "public"
     }
   },
 
