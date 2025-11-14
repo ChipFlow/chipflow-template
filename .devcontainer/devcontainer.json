@@ -26,7 +26,7 @@
         "chat.commandCenter.enabled": false,
         "chat.agent.enabled": false,
 	"chat.disableAIFeatures": true,
-        "workbench.startupEditor": "readme",
+        "workbench.startupEditor": "none",
         "extensions.ignoreRecommendations": true,
         "git.autofetch": false,
         "http.linkProtectionTrustedDomains": [
