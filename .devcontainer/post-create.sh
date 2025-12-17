@@ -18,11 +18,6 @@ EOF
 export PATH="/home/user/.local/bin:$PATH"
 eval "$(pdm venv activate in-project 2>/dev/null || true)"
 
-# Start CORS proxy for vscode-command-server (enables Simple Browser link opening)
-echo "🔧 Starting command server CORS proxy..."
-node .devcontainer/command-server-proxy.js > /tmp/command-server-proxy.log 2>&1 &
-echo "✅ CORS proxy started on port 3001"
-
 # Configurator API base URL (will be set from design config if in codespace)
 CONFIGURATOR_API="${CHIPFLOW_CONFIGURATOR_API:-https://configurator.chipflow.io}"
 
@@ -183,50 +178,18 @@ if [ -f ".venv/bin/activate" ]; then
     echo ""
 fi
 
-# Display welcome page URL if available
-if [ -n "$CHIPFLOW_WELCOME_URL" ]; then
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📖 Getting Started Guide"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "🌐 Opening welcome page in browser..."
-    echo "   $CHIPFLOW_WELCOME_URL"
-    echo ""
-    echo "   The page includes:"
-    echo "   • Your design configuration"
-    echo "   • Copy-paste commands to get started"
-    echo "   • Links to documentation"
-    echo ""
-
-    # Auto-open in VS Code Simple Browser (embeds in editor instead of new tab)
-    # Use vscode-command-server extension to execute simpleBrowser.api.open command
-    # This avoids creating a new codespace which happens with code --open-url
-
-    # Wait for command server to be ready (max 10 seconds)
-    echo "   Waiting for VS Code command server..."
-    for i in $(seq 1 10); do
-        if curl -s http://localhost:3000/health >/dev/null 2>&1; then
-            break
-        fi
-        sleep 1
-    done
-
-    # Try to open in Simple Browser via command server API
-    if curl -s -X POST -H "Content-Type: application/json" \
-        -d "{\"command\":\"simpleBrowser.api.open\", \"args\": [\"$CHIPFLOW_WELCOME_URL\"]}" \
-        http://localhost:3000/execute >/dev/null 2>&1; then
-        echo "   ✓ Opened in VS Code Simple Browser"
-    elif command -v gp >/dev/null 2>&1; then
-        # Fallback: Gitpod/Codespaces browser opener (opens in new tab)
-        gp preview "$CHIPFLOW_WELCOME_URL" >/dev/null 2>&1 &
-    elif command -v python3 >/dev/null 2>&1; then
-        # Fallback: use python webbrowser module (opens in new tab)
-        python3 -c "import webbrowser; webbrowser.open('$CHIPFLOW_WELCOME_URL')" >/dev/null 2>&1 &
-    fi
-
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-fi
+# Display getting started info
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📖 Getting Started"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "   Click the ChipFlow icon in the activity bar to see:"
+echo "   • Your design configuration"
+echo "   • Build, Run, and Submit buttons"
+echo "   • Links to documentation"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
 
 echo "Quick commands:"
 echo "  • F5 or Cmd/Ctrl+Shift+B - Build and run simulation"

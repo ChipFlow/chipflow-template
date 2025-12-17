@@ -37,29 +37,16 @@
       "extensions": [
         "ms-python.python",
         "-github.copilot-chat",
-        "github.vscode-github-actions",
-        "crimson206.vscode-command-server"
+        "github.vscode-github-actions"
       ]
-    }
-  },
-
-  // Port forwarding for vscode-command-server (required for Simple Browser link opening)
-  "forwardPorts": [3000, 3001],
-  "portsAttributes": {
-    "3000": {
-      "label": "VS Code Command Server",
-      "onAutoForward": "silent",
-      "visibility": "public"
-    },
-    "3001": {
-      "label": "Command Server CORS Proxy",
-      "onAutoForward": "silent",
-      "visibility": "public"
     }
   },
 
   // Run during prebuild - installs Python dependencies (cached!)
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
+
+  // Install ChipFlow VS Code extension after container attach
+  "postAttachCommand": "code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.0.vsix --force 2>/dev/null || true",
 
   // Container optimizations
   "containerEnv": {
