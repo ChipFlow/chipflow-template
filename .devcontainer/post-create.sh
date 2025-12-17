@@ -2,7 +2,12 @@
 
 set -e
 
+# Version info for debugging
+TEMPLATE_VERSION="2024-12-17-v2"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🚀 ChipFlow codespace starting..."
+echo "   Template version: ${TEMPLATE_VERSION}"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # disable copilot
 cat << EOF > ~/.vscode.settings
@@ -178,15 +183,19 @@ if [ -f ".venv/bin/activate" ]; then
     echo ""
 fi
 
-# Display getting started info
+# Fetch and display configurator version
+CONFIGURATOR_VERSION=$(curl -s "${CONFIGURATOR_API}/api/version" 2>/dev/null | jq -r '.version // "unknown"' 2>/dev/null || echo "unknown")
+echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📖 Getting Started"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "   Click the ChipFlow icon in the activity bar to see:"
-echo "   • Your design configuration"
-echo "   • Build, Run, and Submit buttons"
-echo "   • Links to documentation"
+echo "   The ChipFlow Welcome panel should open automatically."
+echo "   If not, press Cmd/Ctrl+Shift+P and run 'ChipFlow: Show Welcome'"
+echo ""
+echo "   Versions:"
+echo "   • Template: ${TEMPLATE_VERSION}"
+echo "   • Configurator: ${CONFIGURATOR_VERSION}"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
