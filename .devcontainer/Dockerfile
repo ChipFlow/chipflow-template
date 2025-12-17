@@ -41,13 +41,12 @@ WORKDIR /home/user
 ENV PATH="/home/user/.local/bin:$PATH"
 ENV PDM_VENV_IN_PROJECT=1
 
-# Copy cache-warming design (as user, before RUN so it's in the image)
-COPY --chown=user:user cache-warming /home/user/cache-warming-temp
+# Layer 1: Install PDM and uv (rarely changes)
+RUN curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-RUN --mount=type=bind,target=/src \
-    curl -sSL https://pdm-project.org/install-pdm.py | python3 - && \
-    curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
+# Layer 2: Configure shell (rarely changes)
+RUN echo 'export PATH="/home/user/.local/bin:$PATH"' >> ~/.bashrc && \
     echo 'export PS1="\W\$ "' >> ~/.bashrc && \
     echo 'eval "$(pdm venv activate in-project 2>/dev/null || true)"' >> ~/.bashrc && \
     echo '' >> ~/.bashrc && \
@@ -55,20 +54,28 @@ RUN --mount=type=bind,target=/src \
     echo 'if [ ! -f ~/.post-create-complete ] && [ -f /usr/local/share/post-create.sh ]; then' >> ~/.bashrc && \
     echo '    /usr/local/share/post-create.sh' >> ~/.bashrc && \
     echo '    touch ~/.post-create-complete' >> ~/.bashrc && \
-    echo 'fi' >> ~/.bashrc && \
-    cp /src/pyproject.toml . && \
-    cp /src/pdm.lock . && \
+    echo 'fi' >> ~/.bashrc
+
+# Layer 3: Copy dependency files BEFORE install (cache key)
+# These files determine when deps layer needs to rebuild
+COPY --chown=user:user pyproject.toml pdm.lock ./
+
+# Layer 4: Configure PDM and install dependencies
+# Only rebuilds when pyproject.toml or pdm.lock changes
+RUN mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp /opt/chipflow-cache/zig /opt/chipflow-cache/uv && \
     pdm config use_uv true && \
-    mkdir -p /opt/chipflow-cache/pdm /opt/chipflow-cache/yowasp /opt/chipflow-cache/zig /opt/chipflow-cache/uv && \
     pdm config cache_dir /opt/chipflow-cache/pdm && \
-    export YOWASP_CACHE_DIR=/opt/chipflow-cache/yowasp && \
-    export ZIG_GLOBAL_CACHE_DIR=/opt/chipflow-cache/zig && \
-    echo python $(python --version) && \
-    echo PDM Config && \
-    pdm -vv config && \
-    echo PDM install && \
+    echo "Python version: $(python --version)" && \
+    echo "PDM install starting..." && \
     pdm -vv -n install && \
-    pdm config check_update false && \
+    pdm config check_update false
+
+# Layer 5: Copy cache-warming design and warm caches
+# Only rebuilds when deps change
+COPY --chown=user:user cache-warming /home/user/cache-warming-temp
+
+RUN export YOWASP_CACHE_DIR=/opt/chipflow-cache/yowasp && \
+    export ZIG_GLOBAL_CACHE_DIR=/opt/chipflow-cache/zig && \
     echo "Warming yowasp-yosys cache" && \
     pdm run yowasp-yosys --version && \
     echo "Warming zig cache" && \
