@@ -3,7 +3,7 @@
 set -e
 
 # Version info for debugging
-TEMPLATE_VERSION="2024-12-17-v3"
+TEMPLATE_VERSION="2024-12-17-v4"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🚀 ChipFlow codespace starting..."
 echo "   Template version: ${TEMPLATE_VERSION}"
@@ -196,6 +196,23 @@ echo ""
 echo "   Versions:"
 echo "   • Template: ${TEMPLATE_VERSION}"
 echo "   • Configurator: ${CONFIGURATOR_VERSION}"
+echo ""
+echo "   Extensions:"
+if command -v code &>/dev/null; then
+    if code --list-extensions 2>/dev/null | grep -q "chipflow"; then
+        echo "   ✅ ChipFlow Workbench extension installed"
+    else
+        echo "   ⚠️  ChipFlow Workbench extension not found"
+        echo "   Installing now..."
+        if [ -f ".devcontainer/extensions/chipflow-workbench-0.1.0.vsix" ]; then
+            code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.0.vsix --force 2>/dev/null && echo "   ✅ Extension installed" || echo "   ❌ Installation failed"
+        else
+            echo "   ❌ Extension file not found"
+        fi
+    fi
+else
+    echo "   ⚠️  VS Code CLI not available yet"
+fi
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
