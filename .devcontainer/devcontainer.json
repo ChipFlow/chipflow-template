@@ -55,9 +55,8 @@
     "PDM_VENV_IN_PROJECT": "1"
   },
 
-  // Mount optimizations - persist venv and extensions
+  // Mount optimizations - persist venv
   "mounts": [
-    "source=chipflow-vscode-extensions,target=/home/user/.vscode-server/extensions,type=volume",
     "source=chipflow-venv,target=${containerWorkspaceFolder}/.venv,type=volume"
   ],
 

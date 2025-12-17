@@ -3,7 +3,7 @@
 set -e
 
 # Version info for debugging
-TEMPLATE_VERSION="2024-12-17-v2"
+TEMPLATE_VERSION="2024-12-17-v3"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🚀 ChipFlow codespace starting..."
 echo "   Template version: ${TEMPLATE_VERSION}"
