@@ -3,7 +3,7 @@
 set -e
 
 # Version info for debugging
-TEMPLATE_VERSION="2024-12-17-v4"
+TEMPLATE_VERSION="2024-12-17-v5"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "🚀 ChipFlow codespace starting..."
 echo "   Template version: ${TEMPLATE_VERSION}"
@@ -204,8 +204,8 @@ if command -v code &>/dev/null; then
     else
         echo "   ⚠️  ChipFlow Workbench extension not found"
         echo "   Installing now..."
-        if [ -f ".devcontainer/extensions/chipflow-workbench-0.1.0.vsix" ]; then
-            code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.0.vsix --force 2>/dev/null && echo "   ✅ Extension installed" || echo "   ❌ Installation failed"
+        if [ -f ".devcontainer/extensions/chipflow-workbench-0.1.1.vsix" ]; then
+            code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.1.vsix --force 2>/dev/null && echo "   ✅ Extension installed" || echo "   ❌ Installation failed"
         else
             echo "   ❌ Extension file not found"
         fi
