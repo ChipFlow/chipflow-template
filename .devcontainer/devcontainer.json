@@ -46,7 +46,7 @@
   "onCreateCommand": "bash .devcontainer/install-deps.sh",
 
   // Install ChipFlow VS Code extension after container attach
-  "postAttachCommand": "code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.1.vsix --force 2>/dev/null || true",
+  "postAttachCommand": "code --install-extension .devcontainer/extensions/chipflow-workbench-latest.vsix --force 2>/dev/null || true",
 
   // Container optimizations
   "containerEnv": {
