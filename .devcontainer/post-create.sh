@@ -204,8 +204,8 @@ if command -v code &>/dev/null; then
     else
         echo "   ⚠️  ChipFlow Workbench extension not found"
         echo "   Installing now..."
-        if [ -f ".devcontainer/extensions/chipflow-workbench-0.1.1.vsix" ]; then
-            code --install-extension .devcontainer/extensions/chipflow-workbench-0.1.1.vsix --force 2>/dev/null && echo "   ✅ Extension installed" || echo "   ❌ Installation failed"
+        if [ -f ".devcontainer/extensions/chipflow-workbench-latest.vsix" ]; then
+            code --install-extension .devcontainer/extensions/chipflow-workbench-latest.vsix --force 2>/dev/null && echo "   ✅ Extension installed" || echo "   ❌ Installation failed"
         else
             echo "   ❌ Extension file not found"
         fi
