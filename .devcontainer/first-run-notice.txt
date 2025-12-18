@@ -1,1 +1,5 @@
-🎉 ChipFlow codespace is starting up, please wait!...
+Welcome to ChipFlow!
+
+Your development environment is being configured.
+This may take a moment on first run.
+
